@@ -1,6 +1,6 @@
 @echo off
 REM Check if the script is already running
-python scripts/check_running.py
+call "%~dp0.venv\Scripts\python.exe" scripts/check_running.py
 if %errorlevel% equ 1 (
     echo Script is already running
     exit /b
