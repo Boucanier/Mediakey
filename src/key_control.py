@@ -29,7 +29,7 @@ KEYS_TRANSLATION = {
 
 DEFAULT_KEYS = {
     "next_key": KEYS_TRANSLATION["right"],
-    "prev_key": KEYS_TRANSLATION["leftdown"],
+    "prev_key": KEYS_TRANSLATION["left"],
     "play_key": KEYS_TRANSLATION["down"],
 }
 
@@ -100,12 +100,15 @@ class key_control:
         try :
             if key == self.next_key and self.ctrl_key and self.win_key :
                 subprocess.run("nircmd sendkey 0xB0 press", shell=True, check=True)
+                self.logger.info("Next key pressed")
 
             elif key == self.prev_key and self.ctrl_key and self.win_key :
                 subprocess.run("nircmd sendkey 0xB1 press", shell=True, check=True)
+                self.logger.info("Previous key pressed")
 
             elif key == self.play_key and self.ctrl_key and self.win_key :
                 subprocess.run("nircmd sendkey 0xB3 press", shell=True, check=True)
+                self.logger.info("Play key pressed")
 
             if key in (keyboard.Key.ctrl_l, keyboard.Key.ctrl_r):
                 self.ctrl_key = False
