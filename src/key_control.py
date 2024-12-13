@@ -28,9 +28,9 @@ KEYS_TRANSLATION = {
 }
 
 DEFAULT_KEYS = {
-    "next_key": KEYS_TRANSLATION["enter"],
-    "prev_key": KEYS_TRANSLATION["enter"],
-    "play_key": KEYS_TRANSLATION["enter"],
+    "next_key": KEYS_TRANSLATION["right"],
+    "prev_key": KEYS_TRANSLATION["leftdown"],
+    "play_key": KEYS_TRANSLATION["down"],
 }
 
 class key_control:
