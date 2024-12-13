@@ -1,5 +1,24 @@
 @echo off
 
+REM Install python environment
+echo Installing python environment
+python -m venv .venv
+if %errorlevel% neq 0 (
+    echo Failed to install python environment
+    exit /b 1
+)
+
+REM Installing python packages
+echo Installing python packages
+call ".venv\Scripts\pip.exe" install -r requirements.txt
+if %errorlevel% neq 0 (
+    echo Failed to install python packages
+    exit /b 1
+)
+
+REM Stopping the script if it is running
+call stop.bat
+
 REM Get the current project path
 set "PROJECT_PATH=%~dp0"
 
