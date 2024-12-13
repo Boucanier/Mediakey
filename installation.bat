@@ -1,5 +1,8 @@
 @echo off
 
+REM Stopping the script if it is running
+call stop.bat
+
 REM Checking if nircmd is installed
 where nircmd >nul 2>nul
 if %errorlevel% == 0 (
@@ -24,9 +27,6 @@ if %errorlevel% neq 0 (
     echo Failed to install python packages
     exit /b 1
 )
-
-REM Stopping the script if it is running
-call stop.bat
 
 REM Get the current project path
 set "PROJECT_PATH=%~dp0"
