@@ -11,7 +11,12 @@ from pynput import keyboard
 class key_control:
     def __init__(self):
         self.ctrl_key = False
+        self.win_key = False
         self.logger = self.create_logger()
+        self.next_key = keyboard.Key.right
+        self.prev_key = keyboard.Key.left
+        self.play_key = keyboard.Key.down
+
 
     def create_logger(self):
         today = datetime.now().strftime("%Y-%m-%d")
@@ -36,25 +41,32 @@ class key_control:
         logger.info('Logger created successfully')
         return logger
 
+
     def on_press(self, key):
         # Check if Ctrl key is pressed
-        if key in (keyboard.Key.alt_l, keyboard.Key.alt_r):
+        if key in (keyboard.Key.ctrl_l, keyboard.Key.ctrl_r):
             self.ctrl_key = True
+        if key == keyboard.Key.cmd:
+            self.win_key = True
+
 
     def on_release(self, key):
         # Detect Ctrl + X combination
         try :
-            if key == keyboard.Key.right and self.ctrl_key :
+            if key == self.next_key and self.ctrl_key and self.win_key :
                 subprocess.run("nircmd sendkey 0xB0 press", shell=True, check=True)
 
-            elif key == keyboard.Key.left and self.ctrl_key :
+            elif key == self.prev_key and self.ctrl_key and self.win_key :
                 subprocess.run("nircmd sendkey 0xB1 press", shell=True, check=True)
 
-            elif key == keyboard.Key.down and self.ctrl_key :
+            elif key == self.play_key and self.ctrl_key and self.win_key :
                 subprocess.run("nircmd sendkey 0xB3 press", shell=True, check=True)
 
             if key in (keyboard.Key.alt_l, keyboard.Key.alt_r):
                 self.ctrl_key = False
+
+            elif key == keyboard.Key.cmd:
+                self.win_key = False
 
         except subprocess.CalledProcessError as e:
             self.logger.error("Error: %s", e)
