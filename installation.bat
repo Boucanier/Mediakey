@@ -63,8 +63,8 @@ REM Define the Startup folder path
 set "STARTUP_FOLDER=%UserProfile%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup"
 
 REM Copy new launcher file to the Startup folder
-echo Copying mediakey_launcher.bat to %STARTUP_FOLDER%
-copy /y %LAUNCH_FILE% "%STARTUP_FOLDER%" > nul
+echo Moving mediakey_launcher.bat to %STARTUP_FOLDER%
+move "%LAUNCH_FILE%" "%STARTUP_FOLDER%"
 
 REM Check if the copy was successful
 set "STARTUP_FILE=%STARTUP_FOLDER%\mediakey_launcher.bat"
