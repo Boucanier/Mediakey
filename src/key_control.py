@@ -8,14 +8,37 @@ from datetime import datetime
 import logging
 from pynput import keyboard
 
+KEYS_TRANSLATION = {
+    "right": keyboard.Key.right,
+    "left": keyboard.Key.left,
+    "down": keyboard.Key.down,
+    "up": keyboard.Key.up,
+    "space": keyboard.Key.space,
+    "enter": keyboard.Key.enter,
+    "tab": keyboard.Key.tab,
+    "esc": keyboard.Key.esc,
+    "delete": keyboard.Key.delete,
+    "backspace": keyboard.Key.backspace,
+    "cmd": keyboard.Key.cmd,
+    "ctrl": keyboard.Key.ctrl,
+    "ctrl_l": keyboard.Key.ctrl_l,
+    "ctrl_r": keyboard.Key.ctrl_r,
+    "alt": keyboard.Key.alt,
+    "shift": keyboard.Key.shift,
+}
+
+DEFAULT_KEYS = {
+    "next_key": KEYS_TRANSLATION["enter"],
+    "prev_key": KEYS_TRANSLATION["enter"],
+    "play_key": KEYS_TRANSLATION["enter"],
+}
+
 class key_control:
     def __init__(self):
         self.ctrl_key = False
         self.win_key = False
         self.logger = self.create_logger()
-        self.next_key = keyboard.Key.right
-        self.prev_key = keyboard.Key.left
-        self.play_key = keyboard.Key.down
+        self.next_key, self.prev_key, self.play_key = self.assign_keys()
 
 
     def create_logger(self):
@@ -42,6 +65,28 @@ class key_control:
         return logger
 
 
+    def assign_keys(self):
+        next_key = DEFAULT_KEYS["next_key"]
+        prev_key = DEFAULT_KEYS["prev_key"]
+        play_key = DEFAULT_KEYS["play_key"]
+
+        try :
+            with open("config/config.json", "r", encoding="utf-8") as f:
+                self.logger.info("Reading config file")
+                config = json.load(f)
+                next_key = KEYS_TRANSLATION[config["next_key"]]
+                prev_key = KEYS_TRANSLATION[config["prev_key"]]
+                play_key = KEYS_TRANSLATION[config["play_key"]]
+
+            self.logger.info("Keys assigned successfully")
+
+        except (FileNotFoundError, json.JSONDecodeError, KeyError) as e:
+            self.logger.error("Error: %s", e)
+            self.logger.info("Using default keys")
+
+        return next_key, prev_key, play_key
+
+
     def on_press(self, key):
         # Check if Ctrl key is pressed
         if key in (keyboard.Key.ctrl_l, keyboard.Key.ctrl_r):
@@ -62,7 +107,7 @@ class key_control:
             elif key == self.play_key and self.ctrl_key and self.win_key :
                 subprocess.run("nircmd sendkey 0xB3 press", shell=True, check=True)
 
-            if key in (keyboard.Key.alt_l, keyboard.Key.alt_r):
+            if key in (keyboard.Key.ctrl_l, keyboard.Key.ctrl_r):
                 self.ctrl_key = False
 
             elif key == keyboard.Key.cmd:
