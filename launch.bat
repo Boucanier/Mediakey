@@ -1,5 +1,5 @@
-set PROJECT_PATH=%~dp0
 @echo off
+set PROJECT_PATH=%~dp0
 
 REM Move to the project directory
 cd /d %PROJECT_PATH%

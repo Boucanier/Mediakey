@@ -31,66 +31,52 @@ call stop.bat
 REM Get the current project path
 set "PROJECT_PATH=%~dp0"
 
-REM Path to launch.bat
-set "LAUNCH_FILE=%~dp0launch.bat"
+REM Path to new launcher file
+set "LAUNCH_FILE=%~dp0mediakey_launcher.bat"
+
+REM Path to temporary launcher file
+set "TEMP_LAUNCH_FILE=%~dp0mediakey_launcher.tmp"
 
 REM Check if launch.bat exists
-if not exist %LAUNCH_FILE% (
-    echo %LAUNCH_FILE% not found
+set "ORIGINAL_LAUNCH_FILE=%~dp0launch.bat"
+if not exist %ORIGINAL_LAUNCH_FILE% (
+    echo %ORIGINAL_LAUNCH_FILE% not found
     exit /b 1
 )
 
-REM Create a temporary file
-set "TEMP_FILE=%~dp0launch.tmp"
+REM Create a new launcher file
+echo Creating new launcher file: %LAUNCH_FILE%
 
-REM Add line defining PROJECT_PATH to the temporary file
-echo set PROJECT_PATH=%PROJECT_PATH%> %TEMP_FILE%
+REM Add line defining PROJECT_PATH to the new launcher file
+echo @echo off> %LAUNCH_FILE%
+echo set PROJECT_PATH=%PROJECT_PATH%>> %LAUNCH_FILE%
 
-REM Remove all lines starting with "set PROJECT_PATH=" from launch.bat
-findstr /v /r "^set PROJECT_PATH=" %LAUNCH_FILE% > "%LAUNCH_FILE%.tmp"
-move /y "%LAUNCH_FILE%.tmp" %LAUNCH_FILE% > nul
+REM Add all lines from the original launch.bat to the new launcher file
+type %ORIGINAL_LAUNCH_FILE% >> %TEMP_LAUNCH_FILE%
 
-REM Add all lines from launch.bat to the temporary file
-type %LAUNCH_FILE% >> %TEMP_FILE%
-
-REM Replace launch.bat with the temporary file
-move /y %TEMP_FILE% %LAUNCH_FILE% > nul
+REM Remove all lines starting with "set PROJECT_PATH=" from the new launcher file
+findstr /v /r "^set PROJECT_PATH=" %ORIGINAL_LAUNCH_FILE% | findstr /v /r "^@echo off" > %TEMP_LAUNCH_FILE%
+type %TEMP_LAUNCH_FILE% >> %LAUNCH_FILE%
+del %TEMP_LAUNCH_FILE%
 
 REM Define the Startup folder path
 set "STARTUP_FOLDER=%UserProfile%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup"
 
-REM Copy launch.bat to the Startup folder
-echo Copying launch.bat to %STARTUP_FOLDER%
+REM Copy new launcher file to the Startup folder
+echo Copying mediakey_launcher.bat to %STARTUP_FOLDER%
 copy /y %LAUNCH_FILE% "%STARTUP_FOLDER%" > nul
 
 REM Check if the copy was successful
-set "STARTUP_FILE=%STARTUP_FOLDER%\launch.bat"
+set "STARTUP_FILE=%STARTUP_FOLDER%\mediakey_launcher.bat"
 if exist "%STARTUP_FILE%" (
-    echo launch.bat added to Startup folder successfully.
+    echo mediakey_launcher.bat added to Startup folder successfully.
 ) else (
-    echo Failed to add launch.bat to Startup folder.
+    echo Failed to add mediakey_launcher.bat to Startup folder.
     exit /b 1
 )
 
-REM Rename the file in the Startup folder
-set "NEW_NAME=%STARTUP_FOLDER%\mediakey_launcher.bat"
-REM Remove old file if it exists
-if exist "%NEW_NAME%" (
-    echo Removing old file %NEW_NAME%
-    del /f /q "%NEW_NAME%"
-)
-rename "%STARTUP_FILE%" "mediakey_launcher.bat"
-
-REM Verify if the renaming was successful
-if exist "%NEW_NAME%" (
-    echo File renamed to mediakey_launcher.bat successfully.
-) else (
-    echo Failed to rename the file in the Startup folder.
-    exit /b 1
-)
-
-REM Launch the script
-echo Running %NEW_NAME%
-call "%NEW_NAME%"
+REM Launch the new launcher file
+echo Running %STARTUP_FILE%
+call "%STARTUP_FILE%"
 
 exit /b 0
