@@ -1,5 +1,14 @@
 @echo off
 
+REM Checking if nircmd is installed
+where nircmd >nul 2>nul
+if %errorlevel% == 0 (
+    echo nircmd is installed
+) else (
+    echo nircmd is not installed
+    exit /b 1
+)
+
 REM Install python environment
 echo Installing python environment
 python -m venv .venv
