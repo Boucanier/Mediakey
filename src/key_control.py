@@ -24,7 +24,8 @@ class key_control:
         elif key == keyboard.Key.down and self.ctrl_key :
             subprocess.run("nircmd sendkey 0xB3 press", shell=True, check=True)
 
-        self.ctrl_key = False
+        if key in (keyboard.Key.alt_l, keyboard.Key.alt_r):
+            self.ctrl_key = False
 
         # Stop listener on Esc key
         if key == keyboard.Key.esc:
