@@ -1,7 +1,10 @@
+"""
+    File to create the icon in the system tray.
+"""
+import threading
 from pystray import Icon, MenuItem, Menu
 from PIL import Image, ImageDraw
 from shared import stop_event
-import threading
 
 
 # Create icon image
