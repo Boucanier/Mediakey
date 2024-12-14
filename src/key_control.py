@@ -33,6 +33,8 @@ DEFAULT_KEYS = {
     "play_key": KEYS_TRANSLATION["down"],
 }
 
+CONFIG_FILE = "config/config.json"
+
 class KeyControl:
     """
         Class to handle key press and release events
@@ -52,12 +54,15 @@ class KeyControl:
             :rtype: logging.Logger
         """
         today = datetime.now().strftime("%Y-%m-%d")
-        with open("config/config.json", "r", encoding="utf-8") as f:
-            config = json.load(f)
-            log_path = config["log_path"]
+        try :
+            with open(CONFIG_FILE, "r", encoding="utf-8") as f:
+                config = json.load(f)
+                log_path = config["log_path"]
 
-        if not os.path.exists(log_path):
-            os.makedirs(log_path)
+        except (FileNotFoundError, json.JSONDecodeError, KeyError):
+            log_path = "logs"
+            if not os.path.exists(log_path):
+                os.makedirs(log_path)
 
         logger = logging.getLogger(today)
         logger.setLevel(logging.DEBUG)
@@ -86,7 +91,7 @@ class KeyControl:
         play_key = DEFAULT_KEYS["play_key"]
 
         try :
-            with open("config/config.json", "r", encoding="utf-8") as f:
+            with open(CONFIG_FILE, "r", encoding="utf-8") as f:
                 self.logger.info("Reading config file")
                 config = json.load(f)
                 next_key = KEYS_TRANSLATION[config["next_key"]]
