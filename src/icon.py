@@ -10,7 +10,7 @@ def create_image():
     height = 64
     image = Image.new('RGBA', (width, height), (255, 255, 255, 0))
     draw = ImageDraw.Draw(image)
-    draw.ellipse((8, 8, width - 8, height - 8), fill='red', outline='black')
+    draw.polygon([(0,0), (0, height), (width, height//2)], fill = (100,125,235))
     return image
 
 
