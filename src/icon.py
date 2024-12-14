@@ -24,7 +24,7 @@ def create_image():
 
 
 # Function to quit cleanly
-def quit_program(icon):
+def quit_program(tray_icon):
     """
         Quit the program
 
@@ -32,7 +32,7 @@ def quit_program(icon):
         :type icon: pystray.Icon
     """
     stop_event.set()  # Signal main thread to stop
-    icon.stop()       # Stop the icon
+    tray_icon.stop()       # Stop the icon
 
 
 # Create context menu

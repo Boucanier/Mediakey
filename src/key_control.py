@@ -33,7 +33,7 @@ DEFAULT_KEYS = {
     "play_key": KEYS_TRANSLATION["down"],
 }
 
-class key_control:
+class KeyControl:
     """
         Class to handle key press and release events
     """

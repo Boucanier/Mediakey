@@ -4,7 +4,7 @@
 import sys
 import signal
 import threading
-from key_control import key_control, keyboard
+from key_control import KeyControl, keyboard
 from icon import run_icon
 from shared import stop_event
 
@@ -34,7 +34,7 @@ def main():
         print("Usage: python main.py [--ok | --force]")
         sys.exit(1)
 
-    key_listener = key_control()
+    key_listener = KeyControl()
 
     try:
         with keyboard.Listener(
