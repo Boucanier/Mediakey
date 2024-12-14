@@ -34,6 +34,9 @@ DEFAULT_KEYS = {
 }
 
 class key_control:
+    """
+        Class to handle key press and release events
+    """
     def __init__(self):
         self.ctrl_key = False
         self.win_key = False
@@ -42,6 +45,12 @@ class key_control:
 
 
     def create_logger(self):
+        """
+            Create logger
+
+            :return: logger
+            :rtype: logging.Logger
+        """
         today = datetime.now().strftime("%Y-%m-%d")
         with open("config/config.json", "r", encoding="utf-8") as f:
             config = json.load(f)
@@ -66,6 +75,12 @@ class key_control:
 
 
     def assign_keys(self):
+        """
+            Assign keys from config file
+
+            :return: next_key, prev_key, play_key
+            :rtype: tuple
+        """
         next_key = DEFAULT_KEYS["next_key"]
         prev_key = DEFAULT_KEYS["prev_key"]
         play_key = DEFAULT_KEYS["play_key"]
@@ -88,6 +103,12 @@ class key_control:
 
 
     def on_press(self, key):
+        """
+            Detect key press event and check if ctrl or cmd key is pressed
+
+            :param key: key pressed
+            :type key: pynput.keyboard.Key
+        """
         # Check if Ctrl key is pressed
         if key in (keyboard.Key.ctrl_l, keyboard.Key.ctrl_r):
             self.ctrl_key = True
@@ -96,6 +117,15 @@ class key_control:
 
 
     def on_release(self, key):
+        """
+            Detect key release event and execute command if key combination is detected
+
+            :param key: key released
+            :type key: pynput.keyboard.Key
+
+            :return: False if error occurs (subprocess.CalledProcessError), True otherwise
+            :rtype: bool
+        """
         # Detect Ctrl + X combination
         try :
             if key == self.next_key and self.ctrl_key and self.win_key :

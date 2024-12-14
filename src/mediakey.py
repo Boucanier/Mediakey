@@ -12,12 +12,24 @@ from shared import stop_event
 def handle_interrupt(signal, frame):
     """
         Handle Ctrl+C to stop the script cleanly.
+
+        :param signal: signal number
+        :type signal: int
+        :param frame: current stack frame
+        :type frame: frame object
     """
     print("\nDetected Ctrl+C. Stopping the script...")
     stop_event.set()
 
 
 def main():
+    """
+        Main function to listen to keyboard and execute commands
+
+        :param sys.argv: command line arguments
+        :type sys.argv: list
+        
+    """
     if len(sys.argv) != 2 or sys.argv[1] not in ["--ok", "--force"]:
         print("Usage: python main.py [--ok | --force]")
         sys.exit(1)

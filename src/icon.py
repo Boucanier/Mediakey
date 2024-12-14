@@ -9,6 +9,12 @@ from shared import stop_event
 
 # Create icon image
 def create_image():
+    """
+        Create icon image
+
+        :return: Image
+        :rtype: PIL.Image.Image
+    """
     width = 64
     height = 64
     image = Image.new('RGBA', (width, height), (255, 255, 255, 0))
@@ -18,7 +24,13 @@ def create_image():
 
 
 # Function to quit cleanly
-def quit_program(icon, item):
+def quit_program(icon):
+    """
+        Quit the program
+
+        :param icon: Icon
+        :type icon: pystray.Icon
+    """
     stop_event.set()  # Signal main thread to stop
     icon.stop()       # Stop the icon
 
@@ -42,7 +54,7 @@ icon = Icon(
 # Start icon in a new thread
 def run_icon():
     """
-    Run the icon, checking periodically for the stop_event.
+        Run the icon, checking periodically for the stop_event.
     """
     def check_stop():
         while not stop_event.is_set():
