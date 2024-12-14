@@ -22,12 +22,14 @@ def quit_program(icon, item):
 
 # Create context menu
 menu = Menu(
+    MenuItem('★ MEDIAKEY ★', None, enabled=False),
+    Menu.SEPARATOR,
     MenuItem('Quit', quit_program)
 )
 
 # Create and configure the icon
 icon = Icon(
-    "TempIcone",
+    "TempIcon",
     create_image(),
     menu=menu,
     title="Mediakey"
