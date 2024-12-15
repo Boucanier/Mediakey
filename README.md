@@ -7,7 +7,7 @@ This project handle keyboard shortcuts for multimedia control (play/pause, previ
 
 ## Requirements
 
-At the rrot of the project you need to have a *config* folder containing a *config.json* file like this :
+At the root of the project you need to have a *config* folder containing a *config.json* file like this :
 
 ```json
 {
