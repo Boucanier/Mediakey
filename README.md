@@ -18,11 +18,13 @@ At the root of the project you need to have a *config* folder containing a *conf
 }
 ```
 
-## Installation
+## Installation and running
 
 To simply run the program, execute the script [launch.bat](launch.bat) from the project root.
 
-If you want the program to run at startup, execute the script [installation.bat](installation.bat) from the root project.
+To stop the program, execute the script [stop.bat](stop.bat) from the root project or right click on the Mediakey icon in your system tray and click on "**Quit**".
+
+If you want the program to run at startup, execute the script [installation.bat](installation.bat) from the project root.
 This will create a launcher file in your startup folder and it will start the program.
 
 ## NOTE
