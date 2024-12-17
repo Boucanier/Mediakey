@@ -14,6 +14,7 @@ if %errorlevel% == 0 (
 
 REM Install python environment
 echo Installing python environment
+pip install virtualenv
 python -m venv .venv
 if %errorlevel% neq 0 (
     echo Failed to install python environment
