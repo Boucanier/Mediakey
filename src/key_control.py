@@ -72,7 +72,7 @@ class KeyControl:
         self.next_key, self.prev_key, self.play_key = self.assign_keys()
 
 
-    def create_logger(self):
+    def create_logger(self) -> logging.Logger :
         """
             Create logger
 
@@ -106,7 +106,7 @@ class KeyControl:
         return logger
 
 
-    def assign_keys(self):
+    def assign_keys(self) -> tuple[keyboard.Key, keyboard.Key, keyboard.Key] :
         """
             Assign keys from config file
 
@@ -134,7 +134,7 @@ class KeyControl:
         return next_key, prev_key, play_key
 
 
-    def on_press(self, key):
+    def on_press(self, key : keyboard.Key) -> None :
         """
             Detect key press event and check if ctrl or cmd key is pressed
 
@@ -148,7 +148,7 @@ class KeyControl:
             self.win_key = True
 
 
-    def on_release(self, key):
+    def on_release(self, key : keyboard.Key) -> bool:
         """
             Detect key release event and execute command if key combination is detected
 

@@ -16,7 +16,7 @@ if (sys.version_info.major, sys.version_info.minor) < (3, 10):
     sys.exit(1)
 
 
-def handle_interrupt(signal, frame):
+def handle_interrupt(signal, frame) -> None :
     """
         Handle Ctrl+C to stop the script cleanly.
 

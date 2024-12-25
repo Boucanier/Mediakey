@@ -8,7 +8,7 @@ from shared import stop_event
 
 
 # Create icon image
-def create_image():
+def create_image() -> Image.Image :
     """
         Create icon image
 
@@ -24,7 +24,7 @@ def create_image():
 
 
 # Function to quit cleanly
-def quit_program(tray_icon):
+def quit_program(tray_icon : Icon) -> None :
     """
         Quit the program
 
@@ -52,7 +52,7 @@ icon = Icon(
 
 
 # Start icon in a new thread
-def run_icon():
+def run_icon() -> None :
     """
         Run the icon, checking periodically for the stop_event.
     """
