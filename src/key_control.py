@@ -87,8 +87,9 @@ class KeyControl:
 
         except (FileNotFoundError, json.JSONDecodeError, KeyError):
             log_path = "logs"
-            if not os.path.exists(log_path):
-                os.makedirs(log_path)
+
+        if not os.path.exists(log_path):
+            os.makedirs(log_path)
 
         logger = logging.getLogger(today)
         logger.setLevel(logging.DEBUG)
