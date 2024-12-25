@@ -1,7 +1,15 @@
 @echo off
 
-REM Stopping the script if it is running
-call stop.bat
+REM Checking if python is installed
+where python >nul 2>nul
+if %errorlevel% == 0 (
+    echo python is installed
+) else (
+    echo python is not installed
+    echo Please install python and try again
+    echo Download python from https://www.python.org/downloads/
+    exit /b 1
+)
 
 REM Checking if nircmd is installed
 where nircmd >nul 2>nul
@@ -9,8 +17,13 @@ if %errorlevel% == 0 (
     echo nircmd is installed
 ) else (
     echo nircmd is not installed
+    echo Please install nircmd and try again
+    echo Download nircmd from https://www.nirsoft.net/utils/nircmd.html
     exit /b 1
 )
+
+REM Stopping the script if it is running
+call stop.bat
 
 REM Install python environment
 echo Installing python environment
