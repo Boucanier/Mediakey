@@ -9,6 +9,13 @@ from icon import run_icon
 from shared import stop_event
 
 
+if (sys.version_info.major, sys.version_info.minor) < (3, 10):
+    print("You are using Python {}.{}".format(sys.version_info.major, sys.version_info.minor))
+    print("This script requires Python 3.10 or higher")
+    print("\nYou can download it from https://www.python.org/downloads/")
+    sys.exit(1)
+
+
 def handle_interrupt(signal, frame):
     """
         Handle Ctrl+C to stop the script cleanly.
@@ -35,6 +42,10 @@ def main():
         sys.exit(1)
 
     key_listener = KeyControl()
+    
+    if (sys.version_info.major, sys.version_info.minor) < (3, 10):
+        key_listener.logger.error("You are using Python {}.{}, minimal version required is 3.10".format(sys.version_info.major, sys.version_info.minor))
+        sys.exit(1)
 
     try:
         with keyboard.Listener(
