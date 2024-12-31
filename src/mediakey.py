@@ -3,14 +3,12 @@
 """
 import sys
 import signal
-import threading
 from key_control import KeyControl, keyboard
-from icon import run_icon
 from shared import stop_event
 
 
 if (sys.version_info.major, sys.version_info.minor) < (3, 10):
-    print("You are using Python {}.{}".format(sys.version_info.major, sys.version_info.minor))
+    print(f"You are using Python {sys.version_info.major}.{sys.version_info.minor}")
     print("This script requires Python 3.10 or higher")
     print("\nYou can download it from https://www.python.org/downloads/")
     sys.exit(1)
@@ -42,9 +40,11 @@ def main():
         sys.exit(1)
 
     key_listener = KeyControl()
-    
+
     if (sys.version_info.major, sys.version_info.minor) < (3, 10):
-        key_listener.logger.error("You are using Python {}.{}, minimal version required is 3.10".format(sys.version_info.major, sys.version_info.minor))
+        key_listener.logger.error("You are using Python %s.%s, minimal version required is 3.10",
+                                  sys.version_info.major,
+                                  sys.version_info.minor)
         sys.exit(1)
 
     try:
@@ -63,15 +63,10 @@ if __name__ == '__main__':
     # Attach signal handler for Ctrl+C
     signal.signal(signal.SIGINT, handle_interrupt)
 
-    # Start icon in a new thread
-    icon_thread = threading.Thread(target=run_icon, daemon=True)
-    icon_thread.start()
-
     # Run main function
     try:
         main()
     finally:
         # Ensure the stop_event is set and join the icon thread
         stop_event.set()
-        icon_thread.join()
         print("Script ended properly.")
