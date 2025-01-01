@@ -1,3 +1,6 @@
+"""
+    This file declares constants and functions used in this project depending on the platform used.
+"""
 import sys
 import subprocess
 import os
@@ -8,6 +11,12 @@ from pynput import keyboard
 if platform.system() == "Windows":
 
     def exec_cmd(cmd):
+        """
+            Execute command
+
+            :param cmd: command to execute
+            :type cmd: str
+        """
         subprocess.run(cmd, shell=True, check=True)
 
     CMD_NEXT = "nircmd sendkey 0xB0 press"
@@ -59,8 +68,6 @@ if platform.system() == "Windows":
         "z" : keyboard.KeyCode.from_char('\x1a')
     }
 
-    SUDO_USER = ""
-
 elif platform.system() == "Linux":
     CMD_NEXT = "playerctl next"
     CMD_PREV = "playerctl previous"
@@ -69,6 +76,12 @@ elif platform.system() == "Linux":
     SUDO_USER = os.getenv("SUDO_USER") or os.getenv("USER") or os.getenv("LOGNAME")
 
     def exec_cmd(cmd):
+        """
+            Execute command as sudo user
+
+            :param cmd: command to execute
+            :type cmd: str
+        """
         subprocess.run(["su", "-", SUDO_USER, "-c", cmd], check=True)
 
     KEYS_TRANSLATION = {
