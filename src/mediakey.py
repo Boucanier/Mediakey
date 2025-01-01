@@ -3,7 +3,9 @@
 """
 import sys
 import signal
-from key_control import KeyControl, keyboard
+from pynput import keyboard
+import keyboard as kb
+from key_control import KeyControl
 from shared import stop_event
 
 
@@ -48,11 +50,8 @@ def main():
         sys.exit(1)
 
     try:
-        with keyboard.Listener(
-                on_press=key_listener.on_press,
-                on_release=key_listener.on_release) as listener:
-            while not stop_event.is_set():
-                listener.join(1)  # Check stop event every second
+        kb.hook(key_listener.on_hook)
+        kb.wait()
     except KeyboardInterrupt:
         print("Stopping key listener...")
     finally:
