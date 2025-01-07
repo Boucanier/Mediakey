@@ -76,7 +76,7 @@ class KeyControl:
             self.logger.info("Keys assigned successfully")
 
         except (FileNotFoundError, json.JSONDecodeError, KeyError) as e:
-            self.logger.error("Error: %s", e)
+            self.logger.error("%s", e)
             self.logger.info("Using default keys")
 
         return next_key, prev_key, play_key
