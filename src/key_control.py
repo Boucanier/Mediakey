@@ -84,12 +84,12 @@ class KeyControl:
 
     def on_hook(self, event) -> None:
         if event.event_type == "down":
-            self.on_press(event.scan_code)
+            self.on_press(event.name, event.scan_code)
         elif event.event_type == "up":
-            self.on_release(event.scan_code)
+            self.on_release(event.name, event.scan_code)
 
 
-    def on_press(self, key) -> None :
+    def on_press(self, key, key_code) -> None :
         """
             Detect key press event and check if ctrl or cmd key is pressed
 
@@ -99,11 +99,11 @@ class KeyControl:
         # Check if Ctrl key is pressed
         if key in (KEYS_TRANSLATION["ctrl_l"], KEYS_TRANSLATION["ctrl_r"]):
             self.ctrl_key = True
-        if key == KEYS_TRANSLATION["cmd"]:
+        elif key_code == KEYS_TRANSLATION["cmd"]:
             self.win_key = True
 
 
-    def on_release(self, key) -> bool:
+    def on_release(self, key, key_code) -> bool:
         """
             Detect key release event and execute command if key combination is detected
 
@@ -134,7 +134,7 @@ class KeyControl:
             if key in (KEYS_TRANSLATION["ctrl_l"], KEYS_TRANSLATION["ctrl_r"]):
                 self.ctrl_key = False
 
-            elif key == KEYS_TRANSLATION["cmd"]:
+            elif key_code == KEYS_TRANSLATION["cmd"]:
                 self.win_key = False
 
         except CalledProcessError as e:

@@ -85,25 +85,26 @@ elif platform.system() == "Linux":
         subprocess.run(["su", "-", SUDO_USER, "-c", cmd], check=True)
 
     KEYS_TRANSLATION = {
-        "right": 106,
-        "left": 105,
-        "down": 108,
-        "up": 103,
-        "space": 57,
-        "enter": 28,
-        "tab": 15,
-        "esc": 1,
-        "delete": 111,
-        "backspace": 14,
+        "right": "right",
+        "left": "left",
+        "down": "down",
+        "up": "up",
+        "space": "space",
+        "enter": "enter",
+        "tab": "tab",
+        "esc": "esc",
+        "suppr": "delete",
+        "backspace": "backspace",
         "cmd": 125,
-        "ctrl_l": 29,
-        "ctrl_r": 97,
-        "alt": 56,
-        "shift": 42,
-        "w": 44,
-        "x": 45,
-        "c": 46
+        "ctrl": "ctrl",
+        "ctrl_l": "ctrl",
+        "ctrl_r": "ctrl",
+        "alt": "alt",
+        "shift": "shift"
     }
+
+    for ltr in "abcdefghijklmnopqrstuvwxyz":
+        KEYS_TRANSLATION[ltr] = ltr
 
 else :
     sys.exit(1)
