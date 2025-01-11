@@ -3,7 +3,6 @@
 """
 import sys
 import signal
-from pynput import keyboard
 import keyboard as kb
 from key_control import KeyControl
 from shared import stop_event
