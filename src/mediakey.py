@@ -36,8 +36,8 @@ def main():
         :type sys.argv: list
         
     """
-    if len(sys.argv) != 2 or sys.argv[1] not in ["--ok", "--force"]:
-        print("Usage: python main.py [--ok | --force]")
+    if len(sys.argv) != 2 or sys.argv[1] not in ["--ok", "--force", "--service"]:
+        print("Usage: python main.py [--ok | --force | --service]")
         sys.exit(1)
 
     key_listener = KeyControl()
@@ -50,6 +50,7 @@ def main():
 
     try:
         kb.hook(key_listener.on_hook)
+        key_listener.logger.info("Key listener started as %s", sys.argv[1])
         kb.wait()
     except KeyboardInterrupt:
         print("Stopping key listener...")

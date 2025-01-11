@@ -16,7 +16,7 @@ python3 -m venv .venv
 ./.venv/bin/pip install -r requirements.txt
 
 # Enable sudo without password
-echo "$SUDO_USER ALL=(ALL) NOPASSWD: $(pwd)/.venv/bin/python3 $(pwd)/src/mediakey.py --ok" > mediakey.sudo
+echo "$SUDO_USER ALL=(ALL) NOPASSWD: $(pwd)/.venv/bin/python3 $(pwd)/src/mediakey.py --service" > mediakey.sudo
 sudo mv mediakey.sudo /etc/sudoers.d/mediakey
 
 # Create service
@@ -25,7 +25,7 @@ Description=Mediakey
 After=network.target
 
 [Service]
-ExecStart=sudo $(pwd)/.venv/bin/python3 $(pwd)/src/mediakey.py --ok
+ExecStart=sudo $(pwd)/.venv/bin/python3 $(pwd)/src/mediakey.py --service
 Restart=always
 User=$SUDO_USER
 Group=$SUDO_USER
