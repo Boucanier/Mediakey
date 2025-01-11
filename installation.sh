@@ -14,6 +14,10 @@ sudo apt install -y python3
 python3 -m venv .venv
 ./.venv/bin/pip install -r requirements.txt
 
+# Enable sudo without password
+echo "$SUDO_USER ALL=(ALL) NOPASSWD: $(pwd)/.venv/bin/python3 $(pwd)/src/mediakey.py --ok" > mediakey.sudo
+sudo mv mediakey.sudo /etc/sudoers.d/mediakey
+
 # Create service
 echo "
 Description=Mediakey
@@ -29,5 +33,8 @@ Group=$SUDO_USER
 WantedBy=multi-user.target" > mediakey.service
 
 sudo mv mediakey.service /etc/systemd/system/mediakey.service
+
+sudo systemctl daemon-reload
+
 sudo systemctl enable mediakey.service
 sudo systemctl start mediakey.service
