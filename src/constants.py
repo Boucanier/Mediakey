@@ -5,10 +5,10 @@ import sys
 import subprocess
 import os
 import platform
-from pynput import keyboard
 
 
 if platform.system() == "Windows":
+    from pynput import keyboard
 
     def exec_cmd(cmd):
         """
@@ -68,6 +68,8 @@ if platform.system() == "Windows":
         "z" : keyboard.KeyCode.from_char('\x1a')
     }
 
+    CONFIG_FILE = "config/config.json"
+
 elif platform.system() == "Linux":
     CMD_NEXT = "playerctl next"
     CMD_PREV = "playerctl previous"
@@ -106,6 +108,8 @@ elif platform.system() == "Linux":
     for ltr in "abcdefghijklmnopqrstuvwxyz":
         KEYS_TRANSLATION[ltr] = ltr
 
+    CONFIG_FILE = '/'.join(__file__.split("/")[:-2]) + "/config/config.json"
+
 else :
     sys.exit(1)
 
@@ -114,5 +118,3 @@ DEFAULT_KEYS = {
     "prev_key": KEYS_TRANSLATION["left"],
     "play_key": KEYS_TRANSLATION["down"],
 }
-
-CONFIG_FILE = "config/config.json"
