@@ -9,6 +9,7 @@ fi
 
 # Install the necessary packages
 sudo apt install -y python3
+sudo apt install -y playerctl
 
 #  Install the virtual environment
 python3 -m venv .venv
