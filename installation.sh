@@ -19,7 +19,7 @@ echo Creating virtual environment...
 python3 -m venv .venv
 
 echo Installing requirements...
-./.venv/bin/pip install -r requirements.txt
+./.venv/bin/pip install -r requirements_lnx.txt
 
 
 # Enable sudo without password

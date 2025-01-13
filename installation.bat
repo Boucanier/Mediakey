@@ -36,7 +36,7 @@ if %errorlevel% neq 0 (
 
 REM Installing python packages
 echo Installing python packages
-call ".venv\Scripts\pip.exe" install -r requirements.txt
+call ".venv\Scripts\pip.exe" install -r requirements_win.txt
 if %errorlevel% neq 0 (
     echo Failed to install python packages
     exit /b 1
