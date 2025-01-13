@@ -57,7 +57,7 @@ def main():
     try:
         if platform.system() == "Windows":
             with keyboard.Listener(
-                    on_press=key_listener.on_press_lnx,
+                    on_press=key_listener.on_press,
                     on_release=key_listener.on_release) as listener:
                 while not stop_event.is_set():
                     listener.join(1)  # Check stop event every second
