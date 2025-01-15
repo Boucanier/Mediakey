@@ -3,9 +3,15 @@
 """
 import sys
 import signal
-import keyboard as kb
+import platform
+import threading
 from key_control import KeyControl
 from shared import stop_event
+if platform.system() == "Windows":
+    from icon import run_icon
+    from pynput import keyboard
+elif platform.system() == "Linux":
+    import keyboard as kb
 
 
 if (sys.version_info.major, sys.version_info.minor) < (3, 10):
@@ -49,9 +55,17 @@ def main():
         sys.exit(1)
 
     try:
-        kb.hook(key_listener.on_hook)
-        key_listener.logger.info("Key listener started as %s", sys.argv[1])
-        kb.wait()
+        if platform.system() == "Windows":
+            with keyboard.Listener(
+                    on_press=key_listener.on_press,
+                    on_release=key_listener.on_release) as listener:
+                while not stop_event.is_set():
+                    listener.join(1)  # Check stop event every second
+        elif platform.system() == "Linux":
+            kb.hook(key_listener.on_hook)
+            key_listener.logger.info("Key listener started as %s", sys.argv[1])
+            kb.wait()
+
     except KeyboardInterrupt:
         print("Stopping key listener...")
     finally:
@@ -62,10 +76,17 @@ if __name__ == '__main__':
     # Attach signal handler for Ctrl+C
     signal.signal(signal.SIGINT, handle_interrupt)
 
+    if platform.system() == "Windows":
+        # Start icon in a new thread
+        icon_thread = threading.Thread(target=run_icon, daemon=True)
+        icon_thread.start()
+
     # Run main function
     try:
         main()
     finally:
         # Ensure the stop_event is set and join the icon thread
         stop_event.set()
+        if platform.system() == "Windows":
+            icon_thread.join()
         print("Script ended properly.")

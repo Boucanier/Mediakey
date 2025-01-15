@@ -19,7 +19,7 @@ echo Creating virtual environment...
 python3 -m venv .venv
 
 echo Installing requirements...
-./.venv/bin/pip install -r requirements.txt
+./.venv/bin/pip install -r requirements_lnx.txt
 
 
 # Enable sudo without password
@@ -32,7 +32,7 @@ sudo mv mediakey.sudo /etc/sudoers.d/mediakey
 
 # Create service
 echo Creating service...
-echo "
+echo "[Unit]
 Description=Mediakey
 After=network.target
 

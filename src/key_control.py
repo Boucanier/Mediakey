@@ -84,34 +84,31 @@ class KeyControl:
 
     def on_hook(self, event) -> None:
         if event.event_type == "down":
-            self.on_press(event.name, event.scan_code)
+            if event.scan_code == KEYS_TRANSLATION["cmd"]:
+                self.on_press(event.scan_code)
+            else:
+                self.on_press(event.name)
         elif event.event_type == "up":
-            self.on_release(event.name, event.scan_code)
+            if event.scan_code == KEYS_TRANSLATION["cmd"]:
+                self.on_release(event.scan_code)
+            else:
+                self.on_release(event.name)
 
 
-    def on_press(self, key, key_code) -> None :
+    def on_press(self, key) -> None :
         """
             Detect key press event and check if ctrl or cmd key is pressed
-
-            :param key: key pressed
-            :type key: pynput.keyboard.Key
         """
         # Check if Ctrl key is pressed
         if key in (KEYS_TRANSLATION["ctrl_l"], KEYS_TRANSLATION["ctrl_r"]):
             self.ctrl_key = True
-        elif key_code == KEYS_TRANSLATION["cmd"]:
+        elif isinstance(key, int) or key == KEYS_TRANSLATION["cmd"]:
             self.win_key = True
 
 
-    def on_release(self, key, key_code) -> bool:
+    def on_release(self, key) -> bool:
         """
             Detect key release event and execute command if key combination is detected
-
-            :param key: key released
-            :type key: pynput.keyboard.Key
-
-            :return: False if error occurs (subprocess.CalledProcessError), True otherwise
-            :rtype: bool
         """
         # Detect Ctrl + X combination
         if key == self.play_key and self.ctrl_key and self.win_key :
@@ -134,7 +131,7 @@ class KeyControl:
             if key in (KEYS_TRANSLATION["ctrl_l"], KEYS_TRANSLATION["ctrl_r"]):
                 self.ctrl_key = False
 
-            elif key_code == KEYS_TRANSLATION["cmd"]:
+            elif isinstance(key, int) or key == KEYS_TRANSLATION["cmd"]:
                 self.win_key = False
 
         except CalledProcessError as e:
