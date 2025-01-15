@@ -32,7 +32,7 @@ sudo mv mediakey.sudo /etc/sudoers.d/mediakey
 
 # Create service
 echo Creating service...
-echo "
+echo "[Unit]
 Description=Mediakey
 After=network.target
 
