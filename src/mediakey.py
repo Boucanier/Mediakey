@@ -7,8 +7,8 @@ import platform
 import threading
 from key_control import KeyControl
 from shared import stop_event
-from icon import run_icon
 if platform.system() == "Windows":
+    from icon import run_icon
     from pynput import keyboard
 elif platform.system() == "Linux":
     import keyboard as kb
