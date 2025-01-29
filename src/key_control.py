@@ -2,64 +2,12 @@
     Class to handle key press and release events
 """
 import os
-import subprocess
+from subprocess import CalledProcessError
 import json
 from datetime import datetime
 import logging
-from pynput import keyboard
+from constants import CONFIG_FILE, DEFAULT_KEYS, KEYS_TRANSLATION, CMD_NEXT, CMD_PREV, CMD_PLAY, exec_cmd
 
-KEYS_TRANSLATION = {
-    "right": keyboard.Key.right,
-    "left": keyboard.Key.left,
-    "down": keyboard.Key.down,
-    "up": keyboard.Key.up,
-    "space": keyboard.Key.space,
-    "enter": keyboard.Key.enter,
-    "tab": keyboard.Key.tab,
-    "esc": keyboard.Key.esc,
-    "delete": keyboard.Key.delete,
-    "backspace": keyboard.Key.backspace,
-    "cmd": keyboard.Key.cmd,
-    "ctrl": keyboard.Key.ctrl,
-    "ctrl_l": keyboard.Key.ctrl_l,
-    "ctrl_r": keyboard.Key.ctrl_r,
-    "alt": keyboard.Key.alt,
-    "shift": keyboard.Key.shift,
-    "a" : keyboard.KeyCode.from_char('\x01'),
-    "b" : keyboard.KeyCode.from_char('\x02'),
-    "c" : keyboard.KeyCode.from_char('\x03'),
-    "d" : keyboard.KeyCode.from_char('\x04'),
-    "e" : keyboard.KeyCode.from_char('\x05'),
-    "f" : keyboard.KeyCode.from_char('\x06'),
-    "g" : keyboard.KeyCode.from_char('\x07'),
-    "h" : keyboard.KeyCode.from_char('\x08'),
-    "i" : keyboard.KeyCode.from_char('\x09'),
-    "j" : keyboard.KeyCode.from_char('\x0a'),
-    "k" : keyboard.KeyCode.from_char('\x0b'),
-    "l" : keyboard.KeyCode.from_char('\x0c'),
-    "m" : keyboard.KeyCode.from_char('\x0d'),
-    "n" : keyboard.KeyCode.from_char('\x0e'),
-    "o" : keyboard.KeyCode.from_char('\x0f'),
-    "p" : keyboard.KeyCode.from_char('\x10'),
-    "q" : keyboard.KeyCode.from_char('\x11'),
-    "r" : keyboard.KeyCode.from_char('\x12'),
-    "s" : keyboard.KeyCode.from_char('\x13'),
-    "t" : keyboard.KeyCode.from_char('\x14'),
-    "u" : keyboard.KeyCode.from_char('\x15'),
-    "v" : keyboard.KeyCode.from_char('\x16'),
-    "w" : keyboard.KeyCode.from_char('\x17'),
-    "x" : keyboard.KeyCode.from_char('\x18'),
-    "y" : keyboard.KeyCode.from_char('\x19'),
-    "z" : keyboard.KeyCode.from_char('\x1a')
-}
-
-DEFAULT_KEYS = {
-    "next_key": KEYS_TRANSLATION["right"],
-    "prev_key": KEYS_TRANSLATION["left"],
-    "play_key": KEYS_TRANSLATION["down"],
-}
-
-CONFIG_FILE = "config/config.json"
 
 class KeyControl:
     """
@@ -106,7 +54,7 @@ class KeyControl:
         return logger
 
 
-    def assign_keys(self) -> tuple[keyboard.Key, keyboard.Key, keyboard.Key] :
+    def assign_keys(self) -> tuple :
         """
             Assign keys from config file
 
@@ -128,58 +76,66 @@ class KeyControl:
             self.logger.info("Keys assigned successfully")
 
         except (FileNotFoundError, json.JSONDecodeError, KeyError) as e:
-            self.logger.error("Error: %s", e)
+            self.logger.error("%s", e)
             self.logger.info("Using default keys")
 
         return next_key, prev_key, play_key
 
 
-    def on_press(self, key : keyboard.Key) -> None :
+    def on_hook(self, event) -> None:
+        if event.event_type == "down":
+            if event.scan_code == KEYS_TRANSLATION["cmd"]:
+                self.on_press(event.scan_code)
+            else:
+                self.on_press(event.name)
+        elif event.event_type == "up":
+            if event.scan_code == KEYS_TRANSLATION["cmd"]:
+                self.on_release(event.scan_code)
+            else:
+                self.on_release(event.name)
+
+
+    def on_press(self, key) -> None :
         """
             Detect key press event and check if ctrl or cmd key is pressed
-
-            :param key: key pressed
-            :type key: pynput.keyboard.Key
         """
         # Check if Ctrl key is pressed
-        if key in (keyboard.Key.ctrl_l, keyboard.Key.ctrl_r):
+        if key in (KEYS_TRANSLATION["ctrl_l"], KEYS_TRANSLATION["ctrl_r"]):
             self.ctrl_key = True
-        if key == keyboard.Key.cmd:
+        elif isinstance(key, int) or key == KEYS_TRANSLATION["cmd"]:
             self.win_key = True
 
 
-    def on_release(self, key : keyboard.Key) -> bool:
+    def on_release(self, key) -> bool:
         """
             Detect key release event and execute command if key combination is detected
-
-            :param key: key released
-            :type key: pynput.keyboard.Key
-
-            :return: False if error occurs (subprocess.CalledProcessError), True otherwise
-            :rtype: bool
         """
         # Detect Ctrl + X combination
+        if key == self.play_key and self.ctrl_key and self.win_key :
+            self.logger.info("Play key pressed")
+        elif key == self.next_key and self.ctrl_key and self.win_key :
+            self.logger.info("Next key pressed")
+        elif key == self.prev_key and self.ctrl_key and self.win_key :
+            self.logger.info("Previous key pressed")
+
         try :
-            if key == self.next_key and self.ctrl_key and self.win_key :
-                subprocess.run("nircmd sendkey 0xB0 press", shell=True, check=True)
-                self.logger.info("Next key pressed")
+            if key == self.play_key and self.ctrl_key and self.win_key :
+                exec_cmd(CMD_PLAY)
+
+            elif key == self.next_key and self.ctrl_key and self.win_key :
+                exec_cmd(CMD_NEXT)
 
             elif key == self.prev_key and self.ctrl_key and self.win_key :
-                subprocess.run("nircmd sendkey 0xB1 press", shell=True, check=True)
-                self.logger.info("Previous key pressed")
+                exec_cmd(CMD_PREV)
 
-            elif key == self.play_key and self.ctrl_key and self.win_key :
-                subprocess.run("nircmd sendkey 0xB3 press", shell=True, check=True)
-                self.logger.info("Play key pressed")
-
-            if key in (keyboard.Key.ctrl_l, keyboard.Key.ctrl_r):
+            if key in (KEYS_TRANSLATION["ctrl_l"], KEYS_TRANSLATION["ctrl_r"]):
                 self.ctrl_key = False
 
-            elif key == keyboard.Key.cmd:
+            elif isinstance(key, int) or key == KEYS_TRANSLATION["cmd"]:
                 self.win_key = False
 
-        except subprocess.CalledProcessError as e:
-            self.logger.error("Error: %s", e)
+        except CalledProcessError as e:
+            self.logger.error("%s", e)
             return False
 
         return True
