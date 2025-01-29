@@ -6,6 +6,10 @@
 
 This project handle keyboard shortcuts for multimedia control (play/pause, previous track, next track)
 
+## Note
+
+For the moment, *Mediakey* is available for **Windows** and ***Debian*** based **Linux** distributions. The program has been tested on **Windows 11** and **Ubuntu 24.04**.
+
 ## Requirements
 
 At the root of the project you need to have a *config* folder containing a *config.json* file like this :
@@ -21,23 +25,42 @@ At the root of the project you need to have a *config* folder containing a *conf
 
 To run the program you need the following softwares :
 
-- [Python 3.10](https://www.python.org/downloads/) or above
-- [nircmd](https://www.nirsoft.net/utils/nircmd.html) (for Windows only, in your Windows directory)
+- On Windows :
+  - [Python 3.10](https://www.python.org/downloads/) or above
+  - [nircmd](https://www.nirsoft.net/utils/nircmd.html) (in your Windows directory)
+
+- On Linux :
+  - [Python 3.10](https://www.python.org/downloads/) or above
+  - [playerctl](https://github.com/altdesktop/playerctl)
+
+For both systems, Python required packages can be found in the *requirements.txt* files ([Windows](requirements_win.txt) and [Linux](requirements_lnx.txt)).
 
 ## Installation and running
 
 ### Installation
+
+#### On Windows
 
 If you want the program to run at startup, execute the script [installation.bat](installation.bat) from the project root.
 This will create a launcher file in your startup folder and it will start the program. This will also create a virtual environment in the project root (***.venv***).
 
 If you want to remove the program from the startup, execute the script [uninstall.bat](uninstall.bat) from the project root.
 
+#### On Linux
+
+To install the program on **Linux**, you have to execute the [installation script](installation.sh) from the project root with superuser rights :
+
+```bash
+sudo bash installation.sh
+```
+
+This script will install the required packages, create a virtual environment in the project root (***.venv***) and create a service in **systemd** named ***mediakey***. The service will start at boot. Mediakey service can then be controlled with classic systemctl commands.
+
 ### Virtual environment
 
 If you have installed the program with the [installation script](#installation), you don't need to create the virtual environment.
 
-Otherwise, you have to create a Python virtual environment in the project root :
+Otherwise, you have to create a *Python virtual environment* in the project root :
 
 ```bash
 python -m venv .venv
@@ -64,7 +87,11 @@ deactivate
 
 ### Running
 
-To simply run the program, execute the script [launch.bat](launch.bat) from the project root (you need to have created [the virtual env](#virtual-environment)).
+#### On Windows
+
+Altough the program can be started manually, it is recommended to use the [installation script](#installation) to start the program at startup.
+
+To simply run the program on **Windows**, execute the script [launch.bat](launch.bat) from the project root (you need to have created [the virtual env](#virtual-environment)).
 
 To stop the program, execute the script [stop.bat](stop.bat) from the root project or right click on the Mediakey icon in your system tray and click on "**Quit**".
 
@@ -76,6 +103,12 @@ Once the program is running, you can control your multimedia player with the fol
 
 The arrow keys can be changed in the *config/config.json* file.
 
-## NOTE
+#### On Linux
 
-The program is only available for **Windows systems** now. It will soon be available for popular **Linux** distributions.
+The program is meant to be run as a service on **Linux**. To do so, refer to the [installation part](#installation).
+
+The [launch](launch.sh) and [stop](stop.sh) scripts are currently deprecated and will be adapted in the future. If you want to force the execution of the program, you can execute the following command :
+
+```bash
+python src/mediakey.py --force
+```
