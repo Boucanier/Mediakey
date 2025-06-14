@@ -8,6 +8,14 @@ then
 fi
 
 
+# Stop the service if it is running
+if systemctl is-active --quiet mediakey.service
+then
+	echo Stopping mediakey service...
+	sudo systemctl stop mediakey.service
+fi
+
+
 # Install the necessary packages
 echo Installing packages...
 sudo apt install -y python3
