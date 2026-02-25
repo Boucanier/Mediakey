@@ -10,7 +10,6 @@ imagesize==1.4.1
 keyboard==0.13.5
 MarkupSafe==3.0.2
 packaging==24.2
-pillow==11.0.0
 psutil==6.1.0
 Pygments==2.18.0
 pystray==0.19.5
